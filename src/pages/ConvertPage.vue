@@ -20,6 +20,10 @@
       </div>
     </div>
 
+    <div class="convert-error" v-if="conversionError">
+      <p>{{ conversionError }}</p>
+    </div>
+
     <div v-if="error">
       <p>Ошибка загрузки данных: {{ error }}</p>
     </div>
@@ -51,8 +55,11 @@ export default defineComponent({
     const currencyTo = ref<string>("RUB");
     const amountFrom = ref<number>(0);
     const amountTo = ref<number>(0);
+    const conversionError = ref<string | null>(null);
 
     const convertCurrency = (inverse?: boolean) => {
+      conversionError.value = null;
+
       const parsedCurrencyFrom = currencyFrom.value.toLowerCase();
       const parsedCurrencyTo = currencyTo.value.toLowerCase();
 
@@ -68,7 +75,11 @@ export default defineComponent({
 
       if (!rate) {
         console.error("Conversion rate not found for:", parsedCurrencyFrom, parsedCurrencyTo);
+
+        conversionError.value =
+          "Не удалось конвертировать значения! Попробуйте использовать другую валюту!";
         to.value = 0;
+
         return;
       }
 
@@ -83,6 +94,7 @@ export default defineComponent({
     );
 
     return {
+      conversionError,
       currencies,
       currencyFrom,
       currencyTo,
@@ -100,6 +112,11 @@ export default defineComponent({
   flex-direction: column;
   align-items: center;
   gap: 24px;
+}
+
+.convert-error {
+  margin-top: 12px;
+  color: red;
 }
 
 .currency-input {
