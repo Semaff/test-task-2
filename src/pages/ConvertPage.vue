@@ -1,29 +1,31 @@
 <template>
-  <div>
-    <h1>Конвертация валют</h1>
-    <div>
-      <select v-model="currencyFrom" @change="convertCurrency">
-        <option v-for="currency in currencies" :key="currency" :value="currency">
-          {{ currency }}
-        </option>
-      </select>
-      <input type="number" v-model.number="amountFrom" @input="convertCurrency" />
+  <h1>Конвертация валют</h1>
 
-      <select v-model="currencyTo" @change="convertCurrency">
-        <option v-for="currency in currencies" :key="currency" :value="currency">
-          {{ currency }}
-        </option>
-      </select>
-      <input type="number" v-model.number="amountTo" @input="convertCurrencyInverse" />
-    </div>
-    <div v-if="error">
-      <p>Ошибка загрузки данных: {{ error }}</p>
-    </div>
+  <div>
+    <select v-model="currencyFrom" @change="() => convertCurrency(false)">
+      <option v-for="currency in currencies" :key="currency" :value="currency">
+        {{ currency }}
+      </option>
+    </select>
+    <input type="number" v-model.number="amountFrom" @input="() => convertCurrency(false)" />
+
+    <select v-model="currencyTo" @change="() => convertCurrency(false)">
+      <option v-for="currency in currencies" :key="currency" :value="currency">
+        {{ currency }}
+      </option>
+    </select>
+    <input type="number" v-model.number="amountTo" @input="() => convertCurrency(true)" />
+  </div>
+
+  <div v-if="error">
+    <p>Ошибка загрузки данных: {{ error }}</p>
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref, watch } from "vue";
+
+import { currencies } from "@/constants";
 
 export default defineComponent({
   props: {
@@ -41,47 +43,32 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const currencies = ["USD", "EUR", "RUB"];
     const currencyFrom = ref<string>("USD");
     const currencyTo = ref<string>("RUB");
     const amountFrom = ref<number>(0);
     const amountTo = ref<number>(0);
 
-    // Convert currency based on the props
-    const convertCurrency = () => {
-      if (currencyFrom.value === currencyTo.value) {
-        amountTo.value = parseFloat(amountFrom.value.toFixed(2));
+    const convertCurrency = (inverse?: boolean) => {
+      const parsedCurrencyFrom = currencyFrom.value.toLowerCase();
+      const parsedCurrencyTo = currencyTo.value.toLowerCase();
+
+      const from = !inverse ? amountFrom : amountTo;
+      const to = !inverse ? amountTo : amountFrom;
+
+      if (parsedCurrencyFrom === parsedCurrencyTo) {
+        to.value = from.value;
         return;
       }
 
-      const rateKey = `${currencyFrom.value.toLowerCase()}-${currencyTo.value.toLowerCase()}`;
-      const rate = props.rates[rateKey];
+      const rate = props.rates[`${parsedCurrencyFrom}-${parsedCurrencyTo}`];
 
       if (!rate) {
-        console.error("Conversion rate not found for:", rateKey);
-        amountTo.value = 0;
+        console.error("Conversion rate not found for:", parsedCurrencyFrom, parsedCurrencyTo);
+        to.value = 0;
         return;
       }
 
-      amountTo.value = parseFloat((amountFrom.value * rate).toFixed(2));
-    };
-
-    const convertCurrencyInverse = () => {
-      if (currencyFrom.value === currencyTo.value) {
-        amountFrom.value = parseFloat(amountTo.value.toFixed(2));
-        return;
-      }
-
-      const rateKey = `${currencyTo.value.toLowerCase()}-${currencyFrom.value.toLowerCase()}`;
-      const rate = props.rates[rateKey];
-
-      if (!rate) {
-        console.error("Conversion rate not found for:", rateKey);
-        amountFrom.value = 0;
-        return;
-      }
-
-      amountFrom.value = parseFloat((amountTo.value * rate).toFixed(2));
+      to.value = parseFloat((from.value * rate).toFixed(2));
     };
 
     watch(
@@ -98,7 +85,6 @@ export default defineComponent({
       amountFrom,
       amountTo,
       convertCurrency,
-      convertCurrencyInverse,
     };
   },
 });
