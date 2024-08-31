@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <ul class="rate-list" v-if="!isLoading && convertedRates">
-      <li class="rate-list__item" v-for="(rate, key) in convertedRates" v-bind:key="rate">
+      <li class="rate-list__item" v-for="(rate, key) in convertedRates" v-bind:key="key">
         1 {{ baseCurrency }} = {{ rate }} {{ key }}
       </li>
     </ul>
