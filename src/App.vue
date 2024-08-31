@@ -8,8 +8,8 @@
   />
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
+<script setup lang="ts">
+import { ref } from "vue";
 
 import { useCurrencyRates } from "@/composables/useCurrencyRates";
 
@@ -17,28 +17,13 @@ import MyHeader from "./components/MyHeader.vue";
 
 import type { BaseCurrency } from "./types";
 
-export default defineComponent({
-  components: { MyHeader },
-  methods: {
-    updateBaseCurrency(currency: BaseCurrency) {
-      this.baseCurrency = currency;
-    },
-  },
-  data() {
-    return {
-      baseCurrency: "USD" as BaseCurrency,
-    };
-  },
-  setup() {
-    const { isLoading, error, rates } = useCurrencyRates();
+const { isLoading, error, rates } = useCurrencyRates();
 
-    return {
-      isLoading,
-      error,
-      rates,
-    };
-  },
-});
+const baseCurrency = ref<BaseCurrency>("USD");
+
+const updateBaseCurrency = (currency: BaseCurrency) => {
+  baseCurrency.value = currency;
+};
 </script>
 
 <style>
@@ -59,6 +44,6 @@ html {
   max-width: 540px;
   margin: 48px auto;
   padding: 0 32px;
-  text-align: left;
+  text-align: center;
 }
 </style>
