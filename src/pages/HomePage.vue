@@ -1,17 +1,18 @@
 <template>
-  <div>
-    <h1>Курсы валют</h1>
-    <div v-if="!isLoading && convertedRates">
-      <p>1 {{ baseCurrency }} = {{ convertedRates.USD }} USD</p>
-      <p>1 {{ baseCurrency }} = {{ convertedRates.EUR }} EUR</p>
-      <p>1 {{ baseCurrency }} = {{ convertedRates.RUB }} RUB</p>
-    </div>
-    <div v-else-if="isLoading">
-      <p>Загрузка данных...</p>
-    </div>
-    <div v-else>
-      <p>Ошибка загрузки данных: {{ error }}</p>
-    </div>
+  <h1>Курсы валют</h1>
+
+  <div v-if="!isLoading && convertedRates">
+    <p v-for="(rate, key) in convertedRates" v-bind:key="rate">
+      1 {{ baseCurrency }} = {{ rate }} {{ key }}
+    </p>
+  </div>
+
+  <div v-else-if="isLoading">
+    <p>Загрузка данных...</p>
+  </div>
+
+  <div v-else>
+    <p>Ошибка загрузки данных: {{ error }}</p>
   </div>
 </template>
 
