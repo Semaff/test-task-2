@@ -1,4 +1,9 @@
 <template>
+  <metainfo>
+    <template v-slot:title="{ content }">{{
+      content ? `${content} | Конвертер` : `Конвертер`
+    }}</template>
+  </metainfo>
   <my-header @update-base-currency="updateBaseCurrency" />
   <router-view
     :base-currency="baseCurrency"

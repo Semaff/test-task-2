@@ -1,16 +1,16 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHistory } from "vue-router";
 
-import HomePage from '../pages/HomePage.vue'
-import ConvertPage from '../pages/ConvertPage.vue'
+import HomePage from "../pages/HomePage.vue";
+import ConvertPage from "../pages/ConvertPage.vue";
 
 const routes = [
-  { path: '/', component: HomePage, props: true },
-  { path: '/convert', component: ConvertPage, props: true }
-]
+  { path: "/", component: HomePage, props: true },
+  { path: "/convert", component: ConvertPage, props: true },
+];
 
 const router = createRouter({
   history: createWebHistory(),
-  routes
-})
+  routes,
+});
 
-export default router
+export default router;

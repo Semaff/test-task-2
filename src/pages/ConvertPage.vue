@@ -33,6 +33,8 @@
 <script lang="ts">
 import { defineComponent, ref, watch } from "vue";
 
+import { useMeta } from "vue-meta";
+
 import { currencies } from "@/constants";
 
 export default defineComponent({
@@ -51,6 +53,11 @@ export default defineComponent({
     },
   },
   setup(props) {
+    useMeta({
+      title: "Конвертация валют",
+      htmlAttrs: { lang: "ru" },
+    });
+
     const currencyFrom = ref<string>("USD");
     const currencyTo = ref<string>("RUB");
     const amountFrom = ref<number>(0);

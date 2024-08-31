@@ -19,6 +19,8 @@
 <script lang="ts">
 import { defineComponent, computed } from "vue";
 
+import { useMeta } from "vue-meta";
+
 import { currencies } from "@/constants";
 
 import type { ConvertedRates } from "@/types";
@@ -43,6 +45,11 @@ export default defineComponent({
     },
   },
   setup(props) {
+    useMeta({
+      title: "Главная",
+      htmlAttrs: { lang: "ru" },
+    });
+
     const convertedRates = computed<ConvertedRates | null>(() => {
       if (!props.rates || props.isLoading) return null;
 
