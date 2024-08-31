@@ -1,18 +1,18 @@
 <template>
-  <h1>Курсы валют</h1>
+  <div class="container">
+    <ul class="rate-list" v-if="!isLoading && convertedRates">
+      <li class="rate-list__item" v-for="(rate, key) in convertedRates" v-bind:key="rate">
+        1 {{ baseCurrency }} = {{ rate }} {{ key }}
+      </li>
+    </ul>
 
-  <div v-if="!isLoading && convertedRates">
-    <p v-for="(rate, key) in convertedRates" v-bind:key="rate">
-      1 {{ baseCurrency }} = {{ rate }} {{ key }}
-    </p>
-  </div>
+    <div v-else-if="isLoading">
+      <p>Загрузка данных...</p>
+    </div>
 
-  <div v-else-if="isLoading">
-    <p>Загрузка данных...</p>
-  </div>
-
-  <div v-else>
-    <p>Ошибка загрузки данных: {{ error }}</p>
+    <div v-else>
+      <p>Ошибка загрузки данных: {{ error }}</p>
+    </div>
   </div>
 </template>
 
@@ -62,7 +62,7 @@ export default defineComponent({
           return acc;
         }
 
-        acc[currency] = converted;
+        acc[currency] = +converted.toFixed(2);
         return acc;
       }, {} as ConvertedRates);
     });
@@ -71,3 +71,25 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped>
+.rate-list {
+  padding: 32px 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+
+  border: 1px solid #000;
+}
+
+.rate-list__item {
+  font-size: 17px;
+  font-weight: 600;
+  list-style: none;
+  border-bottom: 1px solid #000;
+  padding: 12px 0;
+}
+</style>

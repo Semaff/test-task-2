@@ -40,3 +40,25 @@ export default defineComponent({
   },
 });
 </script>
+
+<style>
+*,
+*::after,
+*::before {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.container {
+  width: 100%;
+  max-width: 540px;
+  margin: 48px auto;
+  padding: 0 32px;
+  text-align: left;
+}
+</style>

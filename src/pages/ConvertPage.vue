@@ -1,24 +1,28 @@
 <template>
-  <h1>Конвертация валют</h1>
+  <div class="container">
+    <div class="convert-form">
+      <div class="currency-input">
+        <select v-model="currencyFrom" @change="() => convertCurrency(false)">
+          <option v-for="currency in currencies" :key="currency" :value="currency">
+            {{ currency }}
+          </option>
+        </select>
+        <input type="number" v-model.number="amountFrom" @input="() => convertCurrency(false)" />
+      </div>
 
-  <div>
-    <select v-model="currencyFrom" @change="() => convertCurrency(false)">
-      <option v-for="currency in currencies" :key="currency" :value="currency">
-        {{ currency }}
-      </option>
-    </select>
-    <input type="number" v-model.number="amountFrom" @input="() => convertCurrency(false)" />
+      <div class="currency-input">
+        <select v-model="currencyTo" @change="() => convertCurrency(false)">
+          <option v-for="currency in currencies" :key="currency" :value="currency">
+            {{ currency }}
+          </option>
+        </select>
+        <input type="number" v-model.number="amountTo" @input="() => convertCurrency(true)" />
+      </div>
+    </div>
 
-    <select v-model="currencyTo" @change="() => convertCurrency(false)">
-      <option v-for="currency in currencies" :key="currency" :value="currency">
-        {{ currency }}
-      </option>
-    </select>
-    <input type="number" v-model.number="amountTo" @input="() => convertCurrency(true)" />
-  </div>
-
-  <div v-if="error">
-    <p>Ошибка загрузки данных: {{ error }}</p>
+    <div v-if="error">
+      <p>Ошибка загрузки данных: {{ error }}</p>
+    </div>
   </div>
 </template>
 
@@ -89,3 +93,28 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped>
+.convert-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.currency-input {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.currency-input select {
+  padding: 12px 4px;
+  border-radius: 8px;
+}
+
+.currency-input input {
+  padding: 12px;
+  border-radius: 8px;
+}
+</style>
